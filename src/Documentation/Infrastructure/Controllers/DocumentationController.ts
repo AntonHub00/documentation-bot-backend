@@ -1,5 +1,6 @@
 import { Request, Response, Router } from "express";
 import { documentationUseCasesHandler } from "../../DependencyInjection/DependencyInjection";
+import IDocumentationDTO from "../../Domain/UseCases/Contracts/IDocumentationDTO";
 
 export default class DocumentationController {
   private _router: Router;
@@ -43,9 +44,16 @@ export default class DocumentationController {
     }
   }
 
-  public async findAll(_req: Request, res: Response): Promise<void> {
+  public async findAll(req: Request, res: Response): Promise<void> {
+    const text: string | undefined = req.body.text;
+    let documentations: IDocumentationDTO[] | undefined;
+
     try {
-      const documentations = await documentationUseCasesHandler.findAll();
+      if (text) {
+        documentations = await documentationUseCasesHandler.findByText(text);
+      } else {
+        documentations = await documentationUseCasesHandler.findAll();
+      }
 
       if (documentations?.length) res.status(200).send(documentations);
       else res.status(404).send();

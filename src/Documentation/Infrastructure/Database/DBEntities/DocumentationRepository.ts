@@ -1,4 +1,4 @@
-import { getRepository, Repository } from "typeorm";
+import { getRepository, Like, Repository } from "typeorm";
 import IDocumentationDTO from "../../../Domain/UseCases/Contracts/IDocumentationDTO";
 import IDocumentationRepository from "../../../Domain/UseCases/Contracts/IDocumentationRepository";
 import DocumentationDBEntity from "./DocumentationDBEntity";
@@ -23,6 +23,14 @@ export default class DocumentationRepository
 
   public async findAll(): Promise<IDocumentationDTO[] | undefined> {
     return await this.respository.find();
+  }
+
+  public async findByText(
+    text: string
+  ): Promise<IDocumentationDTO[] | undefined> {
+    return await this.respository.find({
+      where: [{ name: Like(`%${text}%`) }, { description: Like(`%${text}%`) }],
+    });
   }
 
   public async update(documentation: IDocumentationDTO): Promise<void> {

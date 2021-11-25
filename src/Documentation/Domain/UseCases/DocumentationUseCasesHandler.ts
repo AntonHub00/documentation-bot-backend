@@ -20,6 +20,12 @@ export default class DocumentationUseCasesHandler {
     return await this.repository.findAll();
   }
 
+  public async findByText(
+    text: string
+  ): Promise<IDocumentationDTO[] | undefined> {
+    return await this.repository.findByText(text);
+  }
+
   public async update(documentation: IDocumentationDTO): Promise<void> {
     await this.repository.update(documentation);
   }

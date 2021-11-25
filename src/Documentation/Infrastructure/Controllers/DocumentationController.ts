@@ -8,8 +8,10 @@ export default class DocumentationController {
     this._router = Router();
 
     this.create = this.create.bind(this);
+    this.findById = this.findById.bind(this);
 
     this._router.post("/", this.create);
+    this._router.get("/:id", this.findById);
   }
 
   public get router(): Router {
@@ -29,6 +31,22 @@ export default class DocumentationController {
     try {
       await documentationUseCasesHandler.create({ name, description, link });
       res.status(201).send();
+    } catch (error) {
+      const e = error as Error;
+      res.status(400).send({ error: e.message });
+    }
+  }
+
+  public async findById(req: Request, res: Response): Promise<void> {
+    const id: string = req.params.id;
+
+    try {
+      const documentation = await documentationUseCasesHandler.findById(id);
+
+      if (documentation) res.status(200).send(documentation);
+      else res.status(404).send();
+
+      return;
     } catch (error) {
       const e = error as Error;
       res.status(400).send({ error: e.message });

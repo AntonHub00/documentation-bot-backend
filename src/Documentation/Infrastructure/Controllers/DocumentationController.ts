@@ -8,9 +8,11 @@ export default class DocumentationController {
     this._router = Router();
 
     this.create = this.create.bind(this);
+    this.findAll = this.findAll.bind(this);
     this.findById = this.findById.bind(this);
 
     this._router.post("/", this.create);
+    this._router.get("/", this.findAll);
     this._router.get("/:id", this.findById);
   }
 
@@ -31,6 +33,18 @@ export default class DocumentationController {
     try {
       await documentationUseCasesHandler.create({ name, description, link });
       res.status(201).send();
+    } catch (error) {
+      const e = error as Error;
+      res.status(400).send({ error: e.message });
+    }
+  }
+
+  public async findAll(_req: Request, res: Response): Promise<void> {
+    try {
+      const documentations = await documentationUseCasesHandler.findAll();
+
+      if (documentations?.length) res.status(200).send(documentations);
+      else res.status(404).send();
     } catch (error) {
       const e = error as Error;
       res.status(400).send({ error: e.message });

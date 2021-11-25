@@ -45,8 +45,6 @@ export default class DocumentationController {
 
       if (documentation) res.status(200).send(documentation);
       else res.status(404).send();
-
-      return;
     } catch (error) {
       const e = error as Error;
       res.status(400).send({ error: e.message });

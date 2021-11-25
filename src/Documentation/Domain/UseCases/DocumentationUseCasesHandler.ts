@@ -1,5 +1,5 @@
 import IDocumentationDTO from "./Contracts/IDocumentationDTO";
-import IDocumentationRepository from "./Contracts/IDocumentationRespository";
+import IDocumentationRepository from "./Contracts/IDocumentationRepository";
 
 export default class DocumentationUseCasesHandler {
   private repository: IDocumentationRepository;

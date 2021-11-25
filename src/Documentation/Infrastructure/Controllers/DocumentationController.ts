@@ -11,11 +11,13 @@ export default class DocumentationController {
     this.findAll = this.findAll.bind(this);
     this.findById = this.findById.bind(this);
     this.update = this.update.bind(this);
+    this.delete = this.delete.bind(this);
 
     this._router.post("/", this.create);
     this._router.get("/", this.findAll);
     this._router.get("/:id", this.findById);
     this._router.put("/:id", this.update);
+    this._router.delete("/:id", this.delete);
   }
 
   public get router(): Router {
@@ -113,6 +115,36 @@ export default class DocumentationController {
         description,
         link,
       });
+
+      res.status(200).send();
+    } catch (error) {
+      const e = error as Error;
+      res.status(400).send({ error: e.message });
+    }
+  }
+
+  public async delete(req: Request, res: Response): Promise<void> {
+    const id: number = Number(req.params.id);
+
+    if (!id) {
+      res.status(400).send({
+        error: "You must provide a numeric id",
+      });
+
+      return;
+    }
+
+    try {
+      const documentationExists = await documentationUseCasesHandler.findById(
+        id
+      );
+
+      if (!documentationExists) {
+        res.status(404).send();
+        return;
+      }
+
+      await documentationUseCasesHandler.delete(id);
 
       res.status(200).send();
     } catch (error) {

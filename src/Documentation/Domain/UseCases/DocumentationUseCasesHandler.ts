@@ -12,7 +12,7 @@ export default class DocumentationUseCasesHandler {
     await this.repository.create(documentation);
   }
 
-  public async findById(id: string): Promise<IDocumentationDTO | undefined> {
+  public async findById(id: number): Promise<IDocumentationDTO | undefined> {
     return await this.repository.findById(id);
   }
 
@@ -24,7 +24,7 @@ export default class DocumentationUseCasesHandler {
     await this.repository.update(documentation);
   }
 
-  public async delete(id: string): Promise<void> {
+  public async delete(id: number): Promise<void> {
     await this.repository.delete(id);
   }
 }

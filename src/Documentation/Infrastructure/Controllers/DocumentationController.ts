@@ -52,7 +52,15 @@ export default class DocumentationController {
   }
 
   public async findById(req: Request, res: Response): Promise<void> {
-    const id: string = req.params.id;
+    const id: number = Number(req.params.id);
+
+    if (!id) {
+      res.status(400).send({
+        error: "You must provide a numeric id",
+      });
+
+      return;
+    }
 
     try {
       const documentation = await documentationUseCasesHandler.findById(id);

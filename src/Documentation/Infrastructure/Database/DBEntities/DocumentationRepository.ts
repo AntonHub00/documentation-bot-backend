@@ -17,7 +17,7 @@ export default class DocumentationRepository
     await this.respository.save(newDocumentation);
   }
 
-  public async findById(id: string): Promise<IDocumentationDTO | undefined> {
+  public async findById(id: number): Promise<IDocumentationDTO | undefined> {
     return await this.respository.findOne(id);
   }
 
@@ -29,7 +29,7 @@ export default class DocumentationRepository
     await this.respository.update(documentation.id!, documentation);
   }
 
-  public async delete(id: string): Promise<void> {
+  public async delete(id: number): Promise<void> {
     await this.respository.delete(id);
   }
 }

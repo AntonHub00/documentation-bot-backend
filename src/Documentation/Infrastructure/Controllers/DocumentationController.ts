@@ -10,10 +10,12 @@ export default class DocumentationController {
     this.create = this.create.bind(this);
     this.findAll = this.findAll.bind(this);
     this.findById = this.findById.bind(this);
+    this.update = this.update.bind(this);
 
     this._router.post("/", this.create);
     this._router.get("/", this.findAll);
     this._router.get("/:id", this.findById);
+    this._router.put("/:id", this.update);
   }
 
   public get router(): Router {
@@ -67,6 +69,52 @@ export default class DocumentationController {
 
       if (documentation) res.status(200).send(documentation);
       else res.status(404).send();
+    } catch (error) {
+      const e = error as Error;
+      res.status(400).send({ error: e.message });
+    }
+  }
+
+  public async update(req: Request, res: Response): Promise<void> {
+    const id: number = Number(req.params.id);
+    const name: string = req.body.name;
+    const description: string = req.body.description;
+    const link: string = req.body.link;
+
+    if (!id) {
+      res.status(400).send({
+        error: "You must provide a numeric id",
+      });
+
+      return;
+    }
+
+    if (!(name && description && link)) {
+      res.status(400).send({
+        error: "You must provide name, description and link",
+      });
+
+      return;
+    }
+
+    try {
+      const documentationExists = await documentationUseCasesHandler.findById(
+        id
+      );
+
+      if (!documentationExists) {
+        res.status(404).send();
+        return;
+      }
+
+      await documentationUseCasesHandler.update({
+        id,
+        name,
+        description,
+        link,
+      });
+
+      res.status(200).send();
     } catch (error) {
       const e = error as Error;
       res.status(400).send({ error: e.message });
